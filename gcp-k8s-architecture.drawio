@@ -1,0 +1,172 @@
+<mxfile host="65bd71144e">
+    <diagram id="gcp-k8s-architecture" name="GCP K8s Architecture">
+        <mxGraphModel dx="1434" dy="790" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="900" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="gcp-cloud" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1f5fe;strokeColor=#01579b;strokeWidth=2;dashed=1;dashPattern=8 8;" vertex="1" parent="1">
+                    <mxGeometry x="40" y="40" width="1320" height="820" as="geometry"/>
+                </mxCell>
+                <mxCell id="gcp-label" value="Google Cloud Platform" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=20;fontStyle=1;fontColor=#01579b;" vertex="1" parent="1">
+                    <mxGeometry x="60" y="50" width="240" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="project-box" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff3e0;strokeColor=#e65100;strokeWidth=2;dashed=1;" vertex="1" parent="1">
+                    <mxGeometry x="80" y="100" width="1240" height="720" as="geometry"/>
+                </mxCell>
+                <mxCell id="project-label" value="Project: my-k8s-cluster" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=16;fontStyle=1;fontColor=#e65100;" vertex="1" parent="1">
+                    <mxGeometry x="100" y="110" width="240" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="vpc-box" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f3e5f5;strokeColor=#4a148c;strokeWidth=2;" vertex="1" parent="1">
+                    <mxGeometry x="120" y="160" width="1160" height="620" as="geometry"/>
+                </mxCell>
+                <mxCell id="vpc-label" value="VPC Network: k8s-vpc" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=14;fontStyle=1;fontColor=#4a148c;" vertex="1" parent="1">
+                    <mxGeometry x="140" y="170" width="200" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="subnet-box" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e8eaf6;strokeColor=#283593;strokeWidth=2;" vertex="1" parent="1">
+                    <mxGeometry x="160" y="220" width="1080" height="520" as="geometry"/>
+                </mxCell>
+                <mxCell id="subnet-label" value="Subnet: k8s-subnet&#10;Region: us-central1&#10;CIDR: 10.0.0.0/24" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=12;fontStyle=1;fontColor=#283593;" vertex="1" parent="1">
+                    <mxGeometry x="180" y="230" width="180" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="control-plane-vm" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#1976d2;strokeWidth=3;" vertex="1" parent="1">
+                    <mxGeometry x="220" y="330" width="440" height="370" as="geometry"/>
+                </mxCell>
+                <mxCell id="cp-vm-label" value="VM Instance: k8s-control-plane&#10;Type: e2-medium&#10;Zone: us-central1-a&#10;OS: Ubuntu 22.04 LTS" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=11;fontStyle=1;fontColor=#1976d2;" vertex="1" parent="1">
+                    <mxGeometry x="240" y="340" width="220" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="cp-k8s-box" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e8f5e9;strokeColor=#2e7d32;strokeWidth=2;dashed=1;" vertex="1" parent="1">
+                    <mxGeometry x="240" y="425" width="400" height="255" as="geometry"/>
+                </mxCell>
+                <mxCell id="cp-k8s-label" value="Kubernetes Control Plane" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=12;fontStyle=1;fontColor=#2e7d32;" vertex="1" parent="1">
+                    <mxGeometry x="280" y="435" width="200" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="api-server" value="API Server" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#81c784;strokeColor=#2e7d32;strokeWidth=1;fontSize=10;fontColor=#ffffff;fontStyle=1;" vertex="1" parent="1">
+                    <mxGeometry x="260" y="475" width="100" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="etcd" value="etcd" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#81c784;strokeColor=#2e7d32;strokeWidth=1;fontSize=10;fontColor=#ffffff;fontStyle=1;" vertex="1" parent="1">
+                    <mxGeometry x="390" y="475" width="100" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="scheduler" value="Scheduler" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#81c784;strokeColor=#2e7d32;strokeWidth=1;fontSize=10;fontColor=#ffffff;fontStyle=1;" vertex="1" parent="1">
+                    <mxGeometry x="260" y="530" width="100" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="controller" value="Controller&#10;Manager" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#81c784;strokeColor=#2e7d32;strokeWidth=1;fontSize=10;fontColor=#ffffff;fontStyle=1;" vertex="1" parent="1">
+                    <mxGeometry x="390" y="530" width="100" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="cp-kubelet" value="kubelet" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#66bb6a;strokeColor=#2e7d32;strokeWidth=1;fontSize=10;fontColor=#ffffff;fontStyle=1;" vertex="1" parent="1">
+                    <mxGeometry x="260" y="585" width="100" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="cp-kube-proxy" value="kube-proxy" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#66bb6a;strokeColor=#2e7d32;strokeWidth=1;fontSize=10;fontColor=#ffffff;fontStyle=1;" vertex="1" parent="1">
+                    <mxGeometry x="390" y="585" width="100" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="cp-containerd" value="containerd" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#a5d6a7;strokeColor=#2e7d32;strokeWidth=1;fontSize=10;fontColor=#1b5e20;fontStyle=1;" vertex="1" parent="1">
+                    <mxGeometry x="260" y="630" width="230" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="worker-vm" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#1976d2;strokeWidth=3;" vertex="1" parent="1">
+                    <mxGeometry x="720" y="330" width="440" height="370" as="geometry"/>
+                </mxCell>
+                <mxCell id="worker-vm-label" value="VM Instance: k8s-worker-1&#10;Type: e2-medium&#10;Zone: us-central1-a&#10;OS: Ubuntu 22.04 LTS" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=11;fontStyle=1;fontColor=#1976d2;" vertex="1" parent="1">
+                    <mxGeometry x="740" y="340" width="220" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="worker-k8s-box" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff9c4;strokeColor=#f57f17;strokeWidth=2;dashed=1;" vertex="1" parent="1">
+                    <mxGeometry x="740" y="425" width="400" height="255" as="geometry"/>
+                </mxCell>
+                <mxCell id="worker-k8s-label" value="Kubernetes Worker Node" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=12;fontStyle=1;fontColor=#f57f17;" vertex="1" parent="1">
+                    <mxGeometry x="800" y="435" width="200" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="worker-kubelet" value="kubelet" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fdd835;strokeColor=#f57f17;strokeWidth=1;fontSize=10;fontColor=#ffffff;fontStyle=1;" vertex="1" parent="1">
+                    <mxGeometry x="760" y="475" width="100" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="worker-kube-proxy" value="kube-proxy" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fdd835;strokeColor=#f57f17;strokeWidth=1;fontSize=10;fontColor=#ffffff;fontStyle=1;" vertex="1" parent="1">
+                    <mxGeometry x="890" y="475" width="100" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="worker-containerd" value="containerd" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff59d;strokeColor=#f57f17;strokeWidth=1;fontSize=10;fontColor=#f57f17;fontStyle=1;" vertex="1" parent="1">
+                    <mxGeometry x="760" y="520" width="230" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="pod1" value="Pod: nginx-test" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ff6f00;strokeColor=#e65100;strokeWidth=1;fontSize=10;fontColor=#ffffff;fontStyle=1;" vertex="1" parent="1">
+                    <mxGeometry x="760" y="570" width="100" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="pod2" value="Pod" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ff8f00;strokeColor=#e65100;strokeWidth=1;fontSize=10;fontColor=#ffffff;fontStyle=1;" vertex="1" parent="1">
+                    <mxGeometry x="890" y="570" width="100" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="pod3" value="Pod" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ff8f00;strokeColor=#e65100;strokeWidth=1;fontSize=10;fontColor=#ffffff;fontStyle=1;" vertex="1" parent="1">
+                    <mxGeometry x="760" y="625" width="100" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="pod-network" value="" style="curved=1;endArrow=classic;html=1;strokeColor=#9c27b0;strokeWidth=2;fillColor=#f3e5f5;dashed=1;dashPattern=5 5;" edge="1" parent="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="500" y="580" as="sourcePoint"/>
+                        <mxPoint x="740" y="580" as="targetPoint"/>
+                        <Array as="points">
+                            <mxPoint x="620" y="550"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="pod-network-label" value="Pod Network (Flannel CNI)&#10;CIDR: 10.244.0.0/16" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=9;fontColor=#9c27b0;fontStyle=1;" vertex="1" parent="1">
+                    <mxGeometry x="550" y="515" width="140" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="firewall-icon" value="" style="shape=image;html=1;verticalAlign=top;verticalLabelPosition=bottom;labelBackgroundColor=#ffffff;imageAspect=0;aspect=fixed;image=data:image/svg+xml,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBmaWxsPSIjZmY1NzIyIiBkPSJNMTIgMUwzIDVWMTFDMyAxNi41NSA2LjI3IDIxLjc0IDExIDIzQzExLjMzIDIzIDExLjY3IDIyLjk1IDEyIDIyLjkzQzEyLjMzIDIyLjk1IDEyLjY3IDIzIDEzIDIzQzE3LjczIDIxLjc0IDIxIDE2LjU1IDIxIDExVjVMMTIgMU05IDE3TDYgMTRMNy40MSAxMi41OUw5IDE0LjE3TDE0LjU5IDguNTlMMTYgMTBMOSAxN1oiLz48L3N2Zz4=" vertex="1" parent="1">
+                    <mxGeometry x="1190" y="250" width="40" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="firewall-box" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffebee;strokeColor=#c62828;strokeWidth=2;dashed=1;" vertex="1" parent="1">
+                    <mxGeometry x="1180" y="300" width="90" height="200" as="geometry"/>
+                </mxCell>
+                <mxCell id="firewall-title" value="Firewall Rules" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=11;fontStyle=1;fontColor=#c62828;" vertex="1" parent="1">
+                    <mxGeometry x="1180" y="305" width="90" height="25" as="geometry"/>
+                </mxCell>
+                <mxCell id="fw-ssh" value="SSH&#10;:22" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ef5350;strokeColor=#c62828;strokeWidth=1;fontSize=9;fontColor=#ffffff;fontStyle=1;" vertex="1" parent="1">
+                    <mxGeometry x="1190" y="340" width="70" height="35" as="geometry"/>
+                </mxCell>
+                <mxCell id="fw-internal" value="Internal&#10;All" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ef5350;strokeColor=#c62828;strokeWidth=1;fontSize=9;fontColor=#ffffff;fontStyle=1;" vertex="1" parent="1">
+                    <mxGeometry x="1190" y="385" width="70" height="35" as="geometry"/>
+                </mxCell>
+                <mxCell id="fw-nodeport" value="NodePort&#10;30000-32767" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e57373;strokeColor=#c62828;strokeWidth=1;fontSize=8;fontColor=#ffffff;fontStyle=1;" vertex="1" parent="1">
+                    <mxGeometry x="1190" y="430" width="70" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="internet" value="Internet" style="ellipse;shape=cloud;whiteSpace=wrap;html=1;fillColor=#b3e5fc;strokeColor=#01579b;strokeWidth=2;fontSize=12;fontStyle=1;fontColor=#01579b;" vertex="1" parent="1">
+                    <mxGeometry x="580" y="740" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="internet-arrow1" value="" style="endArrow=classic;startArrow=classic;html=1;strokeColor=#01579b;strokeWidth=2;" edge="1" parent="1" source="internet" target="control-plane-vm">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="540" y="710" as="sourcePoint"/>
+                        <mxPoint x="590" y="660" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="internet-arrow2" value="" style="endArrow=classic;startArrow=classic;html=1;strokeColor=#01579b;strokeWidth=2;" edge="1" parent="1" source="internet" target="worker-vm">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="700" y="710" as="sourcePoint"/>
+                        <mxPoint x="750" y="660" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="ssh-label1" value="SSH / kubectl" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=9;fontColor=#01579b;fontStyle=1;" vertex="1" parent="1">
+                    <mxGeometry x="450" y="680" width="80" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="ssh-label2" value="SSH" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=9;fontColor=#01579b;fontStyle=1;" vertex="1" parent="1">
+                    <mxGeometry x="750" y="680" width="60" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="legend-box" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fafafa;strokeColor=#616161;strokeWidth=1;" vertex="1" parent="1">
+                    <mxGeometry x="1180" y="550" width="90" height="180" as="geometry"/>
+                </mxCell>
+                <mxCell id="legend-title" value="Legend" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=11;fontStyle=1;fontColor=#212121;" vertex="1" parent="1">
+                    <mxGeometry x="1180" y="555" width="90" height="25" as="geometry"/>
+                </mxCell>
+                <mxCell id="legend-gcp" value="GCP Infrastructure" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1f5fe;strokeColor=#01579b;fontSize=8;fontColor=#01579b;strokeWidth=1;" vertex="1" parent="1">
+                    <mxGeometry x="1190" y="585" width="70" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="legend-vpc" value="VPC/Subnet" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e8eaf6;strokeColor=#283593;fontSize=8;fontColor=#283593;strokeWidth=1;" vertex="1" parent="1">
+                    <mxGeometry x="1190" y="610" width="70" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="legend-vm" value="VM Instance" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#1976d2;fontSize=8;fontColor=#1976d2;strokeWidth=2;" vertex="1" parent="1">
+                    <mxGeometry x="1190" y="635" width="70" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="legend-control" value="Control Plane" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e8f5e9;strokeColor=#2e7d32;fontSize=8;fontColor=#2e7d32;strokeWidth=1;" vertex="1" parent="1">
+                    <mxGeometry x="1190" y="660" width="70" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="legend-worker" value="Worker Node" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff9c4;strokeColor=#f57f17;fontSize=8;fontColor=#f57f17;strokeWidth=1;" vertex="1" parent="1">
+                    <mxGeometry x="1190" y="685" width="70" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="legend-pod" value="Pods" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ff6f00;strokeColor=#e65100;fontSize=8;fontColor=#ffffff;strokeWidth=1;fontStyle=1;" vertex="1" parent="1">
+                    <mxGeometry x="1190" y="710" width="70" height="20" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>
