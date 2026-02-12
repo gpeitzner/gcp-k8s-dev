@@ -28,18 +28,18 @@ Don't worry—the setup is straightforward! Here's what you'll need before we be
 
 Ready to get your hands dirty? We'll build this cluster step by step, starting with the infrastructure and working our way up to a fully functioning cluster. I'll explain what each command does and why it matters.
 
-### 1. Setting Up Your GCP Project
+## Step 1: Setting Up Your GCP Project
 
-First things first—let's create a dedicated GCP project for our cluster and make it the active project.
+First things first—let's create a dedicated GCP project for our cluster and make it the active project. Run these commands on your local machine:
 
 ```bash
 gcloud projects create my-k8s-cluster
 gcloud config set project my-k8s-cluster
 ```
 
-### 2. Configuring Network Infrastructure
+## Step 2: Crafting Your Network Infrastructure
 
-Set up a custom VPC network with regional BGP routing and create a subnet in the us-central1 region.
+Set up a custom VPC network with regional BGP routing and create a subnet in the us-central1 region. Run these commands on your local machine:
 
 ```bash
 gcloud compute networks create k8s-vpc \
@@ -52,9 +52,9 @@ gcloud compute networks subnets create k8s-subnet \
   --region=us-central1
 ```
 
-### 3. Securing Your Cluster with Firewall Rules
+## Step 3: Locking Down Security with Firewall Rules
 
-Configure firewall rules to enable SSH access from anywhere and allow all internal communication between cluster nodes.
+Configure firewall rules to enable SSH access from anywhere and allow all internal communication between cluster nodes. Run these commands on your local machine:
 
 ```bash
 gcloud compute firewall-rules create k8s-allow-ssh \
@@ -67,9 +67,9 @@ gcloud compute firewall-rules create k8s-allow-internal \
   --allow=tcp,udp,icmp
 ```
 
-### 4. Provisioning the Control Plane Node
+## Step 4: Spinning Up Your Control Plane Node
 
-Provision an e2-medium VM instance running Ubuntu 22.04 LTS to serve as the cluster's control plane.
+Provision an e2-medium VM instance running Ubuntu 22.04 LTS to serve as the cluster's control plane. Run this command on your local machine:
 
 ```bash
 gcloud compute instances create k8s-control-plane \
@@ -80,29 +80,27 @@ gcloud compute instances create k8s-control-plane \
   --zone=us-central1-a
 ```
 
-### 5. Connecting to the Control Plane
+## Step 5: SSH Into Your Control Plane
 
-Connect to the control plane VM using the `gcloud` CLI.
+Connect to the control plane VM using the `gcloud` CLI. Run this command on your local machine:
 
 ```bash
 gcloud compute ssh k8s-control-plane --zone=us-central1-a
 ```
 
-### 6. Preparing the Control Plane Environment
+## Step 6: Preparing the Control Plane Environment
 
 Installing `containerd` on Ubuntu for a Kubernetes cluster requires a few specific OS-level tweaks before the actual installation to ensure networking and resource management (cgroups) work correctly.
 
-Here is the step-by-step guide to getting it running on the control plane node.
+Here is the step-by-step guide to getting it running. **All commands in this section run on the control plane node.**
 
----
-
-#### 6.1. Prerequisites: System Configuration
+## System Configuration Prerequisites
 
 Kubernetes requires specific kernel modules and network settings to allow the container runtime to handle bridged traffic.
 
-##### Load Kernel Modules
+**Load Kernel Modules**
 
-Create a configuration file to load the necessary modules on boot:
+Create a configuration file to load the necessary modules on boot (on control plane):
 
 ```bash
 cat <<EOF | sudo tee /etc/modules-load.d/k8s.conf
@@ -114,9 +112,9 @@ sudo modprobe overlay
 sudo modprobe br_netfilter
 ```
 
-##### Configure Sysctl
+**Configure Sysctl**
 
-Enable IP forwarding and bridge networking. The sysctl command applies these changes immediately without requiring a reboot.
+Enable IP forwarding and bridge networking. The sysctl command applies these changes immediately without requiring a reboot (on control plane):
 
 ```bash
 cat <<EOF | sudo tee /etc/sysctl.d/k8s.conf
@@ -128,54 +126,48 @@ EOF
 sudo sysctl --system
 ```
 
----
+## Installing containerd
 
-#### 6.2. Install containerd
-
-You can install `containerd` directly from the official Ubuntu repositories.
+You can install `containerd` directly from the official Ubuntu repositories (on control plane):
 
 ```bash
 sudo apt update
 sudo apt install -y containerd
 ```
 
----
-
-#### 6.3. Configure containerd for Kubernetes
+## Configuring containerd for Kubernetes
 
 This is the most critical step. By default, `containerd` does not use the **systemd cgroup driver**, which Kubernetes strongly recommends for stability.
 
-##### Generate Default Config
+**Generate Default Config**
 
-Create the directory and generate a clean configuration file:
+Create the directory and generate a clean configuration file (on control plane):
 
 ```bash
 sudo mkdir -p /etc/containerd
 containerd config default | sudo tee /etc/containerd/config.toml > /dev/null
 ```
 
-##### Enable Systemd Cgroup Driver
+**Enable Systemd Cgroup Driver**
 
-You need to change `SystemdCgroup = false` to `true`. You can do this manually with an editor or use this `sed` command:
+You need to change `SystemdCgroup = false` to `true`. You can do this manually with an editor or use this `sed` command (on control plane):
 
 ```bash
 sudo sed -i 's/SystemdCgroup = false/SystemdCgroup = true/' /etc/containerd/config.toml
 ```
 
-##### Restart containerd
+**Restart containerd**
 
-Apply the new configuration:
+Apply the new configuration (on control plane):
 
 ```bash
 sudo systemctl restart containerd
 sudo systemctl enable containerd
 ```
 
----
+## Installing kubeadm, kubelet, and kubectl
 
-#### 6.4. Install kubeadm, kubelet, and kubectl
-
-Add the Kubernetes package repository and install the necessary components. Note that the directory `/etc/apt/keyrings` is typically already present on Ubuntu 22.04 systems. The packages are marked as held to prevent automatic updates.
+Add the Kubernetes package repository and install the necessary components. Note that the directory `/etc/apt/keyrings` is typically already present on Ubuntu 22.04 systems. The packages are marked as held to prevent automatic updates (on control plane):
 
 ```bash
 sudo apt-get update
@@ -192,15 +184,15 @@ sudo apt-mark hold kubelet kubeadm kubectl
 sudo systemctl enable --now kubelet
 ```
 
-### 7. Bootstrapping the Kubernetes Control Plane
+## Step 7: Bootstrapping the Kubernetes Control Plane
 
-Bootstrap the Kubernetes control plane with the specified pod network CIDR range.
+Bootstrap the Kubernetes control plane with the specified pod network CIDR range (on control plane):
 
 ```bash
 sudo kubeadm init --pod-network-cidr=10.244.0.0/16
 ```
 
-Once initialization completes successfully, configure kubectl access for your user account.
+Once initialization completes successfully, configure kubectl access for your user account (on control plane):
 
 ```bash
 mkdir -p $HOME/.kube
@@ -210,33 +202,33 @@ sudo chown $(id -u):$(id -g) $HOME/.kube/config
 
 The initialization will output a join token for adding worker nodes. While you can save it, generating a fresh token later is straightforward.
 
-#### Deploy the Pod Network Plugin
+## Deploying Your Pod Network Plugin
 
-Deploy Flannel as the CNI (Container Network Interface) plugin to enable pod-to-pod communication throughout the cluster.
+Deploy Flannel as the CNI (Container Network Interface) plugin to enable pod-to-pod communication throughout the cluster (on control plane):
 
 ```bash
 kubectl apply -f https://github.com/flannel-io/flannel/releases/latest/download/kube-flannel.yml
 ```
 
-#### Enhance Your Command-Line Experience
+## Supercharging Your kubectl Experience
 
-Enable kubectl command auto-completion for the current session and persist it for future sessions. The first command activates it immediately, while the second adds it to your bash profile.
+Enable kubectl command auto-completion for the current session and persist it for future sessions. The first command activates it immediately, while the second adds it to your bash profile (on control plane):
 
 ```bash
 source <(kubectl completion bash)
 echo "source <(kubectl completion bash)" >> ~/.bashrc
 ```
 
-Optionally, create a shorthand alias `k` for kubectl with the same completion behavior.
+Optionally, create a shorthand alias `k` for kubectl with the same completion behavior (on control plane):
 
 ```bash
 alias k=kubectl
 complete -o default -F __start_kubectl k
 ```
 
-### 8. Adding a Worker Node
+## Step 8: Bringing Worker Nodes Into the Mix
 
-With the control plane ready, provision an additional VM instance that will function as a worker node for running workloads.
+With the control plane ready, provision an additional VM instance that will function as a worker node for running workloads. Run this command on your local machine:
 
 ```bash
 gcloud compute instances create k8s-worker-1 \
@@ -247,43 +239,43 @@ gcloud compute instances create k8s-worker-1 \
   --zone=us-central1-a
 ```
 
-### 9. Connecting to the Worker Node
+## Step 9: SSH Into Your Worker Node
 
-Connect to the worker node VM using the `gcloud` CLI.
+Connect to the worker node VM using the `gcloud` CLI. Run this command on your local machine:
 
 ```bash
 gcloud compute ssh k8s-worker-1 --zone=us-central1-a
 ```
 
-### 10. Preparing the Worker Node Environment
+## Step 10: Preparing the Worker Node Environment
 
-Repeat all the installation steps from section 6 on the worker node. Follow sections 6.1 through 6.4 exactly as shown for the control plane.
+**All commands in this section run on the worker node.** Repeat all the installation steps from Step 6 on the worker node: System Configuration Prerequisites, Installing containerd, Configuring containerd for Kubernetes, and Installing kubeadm, kubelet, and kubectl.
 
-### 11. Expanding Your Cluster
+## Step 11: Joining Worker to Control Plane
 
-Generate a fresh join command from the control plane.
+Generate a fresh join command from the control plane (on control plane):
 
 ```bash
 kubeadm token create --print-join-command
 ```
 
-Execute the output command on the worker node to register it with the cluster.
+Execute the output command on the worker node to register it with the cluster (on worker node).
 
-### 12. Testing Your Cluster with an Nginx Pod
+## Step 12: Taking Your Cluster for a Test Drive
 
-Now that your cluster is fully operational, verify everything is working by deploying a simple nginx web server.
+Now that your cluster is fully operational, verify everything is working by deploying a simple nginx web server. **All kubectl commands run on the control plane.**
 
-#### Create and Run an Nginx Pod
+## Creating and Running an Nginx Pod
 
-Deploy an nginx pod to your cluster:
+Deploy an nginx pod to your cluster (on control plane):
 
 ```bash
 kubectl run nginx-test --image=nginx:latest --port=80
 ```
 
-#### Verify the Pod is Running
+## Verifying the Pod is Running
 
-Check the status of your pod:
+Check the status of your pod (on control plane):
 
 ```bash
 kubectl get pods
@@ -296,33 +288,33 @@ NAME         READY   STATUS    RESTARTS   AGE
 nginx-test   1/1     Running   0          30s
 ```
 
-#### Get Detailed Pod Information
+## Getting Detailed Pod Information
 
-View more details about the running pod:
+View more details about the running pod (on control plane):
 
 ```bash
 kubectl describe pod nginx-test
 ```
 
-#### Expose the Pod (Optional)
+## Exposing the Pod to the World
 
-If you want to access nginx from within the cluster, create a service:
+If you want to access nginx from within the cluster, create a service (on control plane):
 
 ```bash
 kubectl expose pod nginx-test --type=NodePort --port=80
 ```
 
-Check the service and assigned port:
+Check the service and assigned port (on control plane):
 
 ```bash
 kubectl get services nginx-test
 ```
 
-#### Access Nginx from Your Computer
+## Accessing Nginx from Your Computer
 
 To access the nginx server from your local machine, you'll need to open the NodePort in GCP's firewall and get the external IP of one of your nodes.
 
-First, create a firewall rule to allow traffic on NodePort range (30000-32767):
+First, create a firewall rule to allow traffic on NodePort range (30000-32767), run this on your local machine:
 
 ```bash
 gcloud compute firewall-rules create k8s-allow-nodeport \
@@ -331,13 +323,13 @@ gcloud compute firewall-rules create k8s-allow-nodeport \
   --source-ranges=0.0.0.0/0
 ```
 
-Get the external IP address of your worker node or control plane:
+Get the external IP address of your worker node or control plane (on your local machine):
 
 ```bash
 gcloud compute instances list --filter="name~'k8s-'"
 ```
 
-Note the `EXTERNAL_IP` from the output. Now get the NodePort assigned to your service:
+Note the `EXTERNAL_IP` from the output. Now get the NodePort assigned to your service (on control plane):
 
 ```bash
 kubectl get service nginx-test -o jsonpath='{.spec.ports[0].nodePort}'
@@ -357,24 +349,24 @@ http://34.123.45.67:31234
 
 You should see the "Welcome to nginx!" page.
 
-#### Clean Up the Test Resources
+## Cleaning Up the Test Resources
 
-Remove the nginx pod and service when you're done testing:
+Remove the nginx pod and service when you're done testing (on control plane):
 
 ```bash
 kubectl delete service nginx-test
 kubectl delete pod nginx-test
 ```
 
-If you created the NodePort firewall rule, remove it as well:
+If you created the NodePort firewall rule, remove it as well (on your local machine):
 
 ```bash
 gcloud compute firewall-rules delete k8s-allow-nodeport
 ```
 
-### 13. Cleaning Up Resources
+## Step 13: Tearing Down Your Cluster
 
-Tear down all created resources in reverse order. Start with the VMs, then remove firewall rules, subnet, and VPC.
+Tear down all created resources in reverse order. Start with the VMs, then remove firewall rules, subnet, and VPC. Run these commands on your local machine:
 
 ```bash
 gcloud compute instances delete k8s-control-plane k8s-worker-1 \
